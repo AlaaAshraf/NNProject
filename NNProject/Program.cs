@@ -14,9 +14,16 @@ namespace NNProject
         [STAThread]
         static void Main()
         {
+            string path = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\Training Dataset\\";
+            DataSet TrainingData = new DataSet(path);
+            path = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\Testing Dataset\\";
+            DataSet TestingData = new DataSet(path);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+
+            
         }
     }
 }
