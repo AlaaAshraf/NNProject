@@ -11,7 +11,7 @@ namespace NNProject
         //List of lists containing all neurons in the network
         List<List<Neuron>> neurons;
         bool bias;
-
+        DataSet TrainingData, TestingData;
         /// <summary>
         /// Builds the Neural network, takes 3 parameters: 1- List containing number of nuerons per layer
         ///                                                2- Number of Input Features
@@ -20,8 +20,9 @@ namespace NNProject
         /// <param name="NetworkStructure"></ListOfNumberOfNeuronsPerLayer>
         /// <param name="numberOfInputFeatures"></NumberOfInputFeatures>
         /// <param name="bias"></BiasBoolean>
-        public NeuralNetwork(List<int> NetworkStructure, int numberOfInputFeatures, bool b)
+        public NeuralNetwork(List<int> NetworkStructure, int numberOfInputFeatures, bool b, string dataPath)
         {
+            loadData(dataPath);
             bias = b;
             neurons = new List<List<Neuron>>();
             for (int i = 0; i < NetworkStructure.Count; i++)
@@ -37,6 +38,15 @@ namespace NNProject
                 }
                 neurons.Add(layer);
             }
+        }
+
+        void loadData(string dataPath)
+        {
+            string path = dataPath + "Training Dataset\\";
+            TrainingData = new DataSet(path);
+            path = dataPath + "Testing Dataset\\";
+            TestingData = new DataSet(path);
+
         }
     }
 }

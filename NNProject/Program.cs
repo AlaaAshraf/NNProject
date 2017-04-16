@@ -14,10 +14,10 @@ namespace NNProject
         [STAThread]
         static void Main()
         {
-            string path = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\Training Dataset\\";
-            DataSet TrainingData = new DataSet(path);
-            path = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\Testing Dataset\\";
-            DataSet TestingData = new DataSet(path);
+            string dataPath = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\";
+            List<int> NetworkStructure = new List<int>(new int[] { 4, /* Add a number of neurons for each hidden layer */ 4 });
+            int numberOfInputFeatures = 19;
+            NeuralNetwork nn = new NeuralNetwork(NetworkStructure, numberOfInputFeatures, true, dataPath);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
