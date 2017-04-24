@@ -40,6 +40,40 @@ namespace NNProject
             }
         }
 
+        public void train()
+        {
+            #region ForwardStep
+            for (int i=0; i<TrainingData.closing.Count; i++)// Closing dataset
+            {
+                List<double> InputOfLayer;
+                List<double> OutputOfLayer = new List<double>();
+                for (int j=0; j<neurons.Count; j++)// Number of layers
+                {
+                    if (j == 0)
+                    {
+                        for (int k = 0; k < neurons[j].Count; ++k)// Number of neurons
+                        {
+                            OutputOfLayer.Add(TrainingData.closing[i][k]);
+                        }
+                    }
+                    else
+                    {
+                        InputOfLayer = OutputOfLayer;
+                        OutputOfLayer = new List<double>();
+                        for (int k = 0; k < neurons[j].Count; ++k)// Number of neurons
+                        {
+                            OutputOfLayer.Add(neurons[j][k].fireSigmoid(InputOfLayer));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region BackwardStep
+
+            #endregion
+        }
+
         void loadData(string dataPath)
         {
             string path = dataPath + "Training Dataset\\";

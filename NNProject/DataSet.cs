@@ -10,7 +10,7 @@ namespace NNProject
     class DataSet
     {
         //Features of the different classes
-        public List<double> closing, down, front, left;
+        public List<List<double>> closing, down, front, left;
         public DataSet(string path)
         {
             closing = extractFeatures(path, "Closing Eyes\\");
@@ -18,16 +18,18 @@ namespace NNProject
             front = extractFeatures(path, "Looking Front\\");
             left = extractFeatures(path, "Looking Left\\");
         }
-        List<double> extractFeatures(string path, string Class)
+        List<List<double>> extractFeatures(string path, string Class)
         {
-            List<double> features = new List<double>();
+            List<List<double>> Ret = new List<List<double>>();
+
             foreach (string file in Directory.EnumerateFiles(path + Class, "*.pts"))
             {
+                List<double> features = new List<double>();
                 string[] contents = File.ReadAllLines(file);
                 List<Tuple<double, double>> points = new List<Tuple<double, double>>();
                 for (int i = 3; i < 20 + 3; i++)
                 {
-                    string []line = contents[i].Split(' ');
+                    string[] line = contents[i].Split(' ');
                     points.Add(new Tuple<double, double>(Convert.ToDouble(line[0]), Convert.ToDouble(line[1])));
                 }
                 for (int i = 0; i < 20; i++)
@@ -36,8 +38,9 @@ namespace NNProject
                         continue;
                     features.Add(Math.Sqrt(Math.Pow((points[i].Item1 - points[14].Item1), 2) + Math.Pow((points[i].Item2 - points[14].Item2), 2)));
                 }
+                Ret.Add(features);
             }
-            return features;
+            return Ret;
         }
     }
 }
