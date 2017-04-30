@@ -17,6 +17,8 @@ namespace NNProject
             down = extractFeatures(path, "Looking Down\\");
             front = extractFeatures(path, "Looking Front\\");
             left = extractFeatures(path, "Looking Left\\");
+
+            scale();
         }
         List<List<double>> extractFeatures(string path, string Class)
         {
@@ -41,6 +43,42 @@ namespace NNProject
                 Ret.Add(features);
             }
             return Ret;
+        }
+
+        void scale()
+        {
+            double min = double.MaxValue, max = double.MinValue;
+            for(int i=0; i<19; i++)
+            {
+                for(int j=0; j<closing.Count; j++)
+                {
+                    if (closing[j][i] > max)
+                        max = closing[j][i];
+                    if (down[j][i] > max)
+                        max = down[j][i];
+                    if (left[j][i] > max)
+                        max = left[j][i];
+                    if (front[j][i] > max)
+                        max = front[j][i];
+
+                    if (closing[j][i] < min)
+                        min = closing[j][i];
+                    if (down[j][i] < min)
+                        min = down[j][i];
+                    if (left[j][i] < min)
+                        min = left[j][i];
+                    if (front[j][i] < min)
+                        min = front[j][i];
+                }
+
+                for(int j=0; j<closing.Count; j++)
+                {
+                    closing[j][i] = (closing[j][i] - min) / (max - min);
+                    down[j][i] = (down[j][i] - min) / (max - min);
+                    left[j][i] = (left[j][i] - min) / (max - min);
+                    front[j][i] = (front[j][i] - min) / (max - min);
+                }
+            }
         }
     }
 }
