@@ -33,7 +33,7 @@ namespace NNProject
         /// </summary>
         /// <param name="features"></InputFeatures>
         /// <returns></WeightsXInputFeatures>
-        public double fireSigmoid(List<double> fea)
+        public Tuple<double,double> fireSigmoid(List<double> fea)
         {
             List<double> features = new List<double>();
             for (int i = 0; i < fea.Count; i++)
@@ -45,7 +45,15 @@ namespace NNProject
 
             for (int i = 0; i < features.Count; i++)
                 value += features[i] * weights[i];
-            return 1.0/(1.0+Math.Exp(-value));
+            double result = 1 / (1 + Math.Exp(-value)); ;
+            double derivative = result*(1-result);
+            //result = value / (1 + Math.Abs(value));
+            //derivative = value / ((1 + Math.Abs(value)) * (1 + Math.Abs(value)));
+            result = (1 - Math.Exp(-value)) / (1 + Math.Exp(-value));
+            derivative = (4 * Math.Exp(2 * value)) / Math.Pow((1 + Math.Exp(2 * value)), 2);
+            return new Tuple<double, double>(result,derivative);
+            //return 1.0/(1.0+Math.Exp(-value));
+            //return Math.Atan(value);
         }
 
         double GetRandomNumber(double minimum, double maximum)

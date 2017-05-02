@@ -15,17 +15,17 @@ namespace NNProject
         static void Main()
         {
             string dataPath = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\";
-            List<int> NetworkStructure = new List<int>(new int[] { 4,5,5, /* Add a number of neurons for each hidden layer */ 4 });
+            List<int> NetworkStructure = new List<int>(new int[] {5,4, /* Add a number of neurons for each hidden layer */ 4 });
             int numberOfInputFeatures = 19;
             NeuralNetwork nn = new NeuralNetwork(NetworkStructure, numberOfInputFeatures, true, dataPath);
             nn.train();
-           double x = nn.test();
+            double accuracy = nn.test();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
-            
+
         }
     }
 }

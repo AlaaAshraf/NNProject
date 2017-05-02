@@ -38,7 +38,8 @@ namespace NNProject
                 {
                     if (i == 14)
                         continue;
-                    features.Add(Math.Sqrt(Math.Pow((points[i].Item1 - points[14].Item1), 2) + Math.Pow((points[i].Item2 - points[14].Item2), 2)));
+                    //features.Add(Math.Sqrt(Math.Pow((points[i].Item1 - points[14].Item1), 2) + Math.Pow((points[i].Item2 - points[14].Item2), 2)));
+                    features.Add((points[i].Item1 - points[14].Item1) + (points[i].Item2-points[14].Item2));
                 }
                 Ret.Add(features);
             }
