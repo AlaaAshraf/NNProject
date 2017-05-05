@@ -16,12 +16,11 @@ namespace NNProject
 		public List<double> FrontCount = new List<double>(new double[] { 0, 0, 0, 0 });
 		public List<double> LeftCount = new List<double>(new double[] { 0, 0, 0, 0 });
 
-		public MultilayerPerceptron(int epochs, double eta)
+		public MultilayerPerceptron(int epochs, double eta, string DataSetPath)
 		{
-			string DataPath = "E:\\FCIS\\CS\\Neural Networks\\Project\\Project\\Dataset\\";
 			List<int> NetworkStructure = new List<int>(new int[] { 30, 8, 7, 4, /* Add a number of Neurons for each hidden layer */ 4 });
 			int numberOfInputFeatures = 19;
-			NN = new NeuralNetwork(NetworkStructure, numberOfInputFeatures, true, DataPath);
+			NN = new NeuralNetwork(NetworkStructure, numberOfInputFeatures, true, DataSetPath);
 			Epochs = epochs;
 			Eta = eta;
 		}
@@ -155,7 +154,6 @@ namespace NNProject
 			List<double> DownOutput = new List<double>(new double[] { 0, 1, 0, 0 });
 			List<double> FrontOutput = new List<double>(new double[] { 0, 0, 1, 0 });
 			List<double> LeftOutput = new List<double>(new double[] { 0, 0, 0, 1 });
-
 
 			for (int i = 0; i < NN.TestingData.Closing.Count; i++)
 			{

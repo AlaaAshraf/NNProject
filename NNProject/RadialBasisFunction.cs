@@ -45,31 +45,27 @@ namespace NNProject
 				Size.Add(0);
 			}
 
-			//	Fetch centroid from closing data.
+			//	Fetch centroids from closing data.
 			for (int i = 0; i < Math.Min(TempSize, NN.TrainingData.Closing.Count); ++i)
-				for (int j = 0; j < NumberOfInputFeatures; ++j)
-					Centroids.Add(NN.TrainingData.Closing[i]);
+				Centroids.Add(NN.TrainingData.Closing[i]);
 			TempSize -= NN.TrainingData.Closing.Count;
 			if (TempSize < 0) TempSize = 0;
 
-			//	Fetch centroid from down data.
+			//	Fetch centroids from down data.
 			for (int i = 0; i < Math.Min(TempSize, NN.TrainingData.Down.Count); ++i)
-				for (int j = 0; j < NumberOfInputFeatures; ++j)
-					Centroids.Add(NN.TrainingData.Down[i]);
+				Centroids.Add(NN.TrainingData.Down[i]);
 			TempSize -= NN.TrainingData.Down.Count;
 			if (TempSize < 0) TempSize = 0;
 
-			//	Fetch centroid from front data.
+			//	Fetch centroids from front data.
 			for (int i = 0; i < Math.Min(TempSize, NN.TrainingData.Front.Count); ++i)
-				for (int j = 0; j < NumberOfInputFeatures; ++j)
-					Centroids.Add(NN.TrainingData.Front[i]);
+				Centroids.Add(NN.TrainingData.Front[i]);
 			TempSize -= NN.TrainingData.Front.Count;
 			if (TempSize < 0) TempSize = 0;
 
-			//	Fetch centroid from left data.
+			//	Fetch centroids from left data.
 			for (int i = 0; i < Math.Min(TempSize, NN.TrainingData.Left.Count); ++i)
-				for (int j = 0; j < NumberOfInputFeatures; ++j)
-					Centroids.Add(NN.TrainingData.Left[i]);
+				Centroids.Add(NN.TrainingData.Left[i]);
 		}
 
 		double EuclideanDistance(List<double> Centroid, List<double> Sample)
@@ -109,7 +105,7 @@ namespace NNProject
 						Minimum = Distance[j];
 						Index = j;
 					}
-				for (int j = 0; j < HiddenLayerSize; ++j)
+				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Centroids[Index][j] += NN.TrainingData.Closing[i][j];
 				Sum[Index] += Distance[Index];
 				++Size[Index];
@@ -126,7 +122,7 @@ namespace NNProject
 						Minimum = Distance[j];
 						Index = j;
 					}
-				for (int j = 0; j < HiddenLayerSize; ++j)
+				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Centroids[Index][j] += NN.TrainingData.Down[i][j];
 				Sum[Index] += Distance[Index];
 				++Size[Index];
@@ -143,7 +139,7 @@ namespace NNProject
 						Minimum = Distance[j];
 						Index = j;
 					}
-				for (int j = 0; j < HiddenLayerSize; ++j)
+				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Centroids[Index][j] += NN.TrainingData.Front[i][j];
 				Sum[Index] += Distance[Index];
 				++Size[Index];
@@ -160,7 +156,7 @@ namespace NNProject
 						Minimum = Distance[j];
 						Index = j;
 					}
-				for (int j = 0; j < HiddenLayerSize; ++j)
+				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Centroids[Index][j] += NN.TrainingData.Left[i][j];
 				Sum[Index] += Distance[Index];
 				++Size[Index];
@@ -177,9 +173,12 @@ namespace NNProject
 			for (int i = 0; i < HiddenLayerSize; ++i)
 			{
 				double Sum = 0;
+
 				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Sum += (Features[j] - Centroids[i][j]) * (Features[j] - Centroids[i][j]);
-				Ret.Add(Math.Exp(Sum / Variance[i] / -2));
+
+				if (Variance[i] < 0.0000001) Ret.Add(0);
+				else Ret.Add(Math.Exp(Sum / Variance[i] / -2));
 			}
 
 			return Ret;
@@ -196,9 +195,11 @@ namespace NNProject
 			for (int i = 0; i < NumberOfNeuronsInOutputLayer; ++i)
 			{
 				double Sum = 0;
+
 				for (int j = 0; j < G.Count; ++j)
 					Sum += G[j] * NN.Neurons[0][i].Weights[j];
-				Output.Add(Sum);
+
+				Output.Add(1 / (1 + Math.Exp(-Sum)));
 			}
 
 			for (int i = 0; i < NumberOfNeuronsInOutputLayer; ++i)
@@ -223,25 +224,25 @@ namespace NNProject
 
 			for (int i = 0; i < NumberOfEpochs; ++i)
 			{
-				List<double> SquareError = new List<double>();
+				List<double> Error = new List<double>();
 				double MeanSquareError = 0;
 
 				for (int j = 0; j < NN.TrainingData.Closing.Count; ++j)
 				{
-					SquareError.Add(TrainSample(NN.TrainingData.Closing[j], 0));
-					SquareError.Add(TrainSample(NN.TrainingData.Down[j], 1));
-					SquareError.Add(TrainSample(NN.TrainingData.Front[j], 2));
-					SquareError.Add(TrainSample(NN.TrainingData.Left[j], 3));
+					Error.Add(TrainSample(NN.TrainingData.Closing[j], 0));
+					Error.Add(TrainSample(NN.TrainingData.Down[j], 1));
+					Error.Add(TrainSample(NN.TrainingData.Front[j], 2));
+					Error.Add(TrainSample(NN.TrainingData.Left[j], 3));
 				}
 
-				for (int j = 0; j < SquareError.Count; ++j)
-					MeanSquareError += SquareError[j];
-				MeanSquareError /= SquareError.Count;
+				for (int j = 0; j < Error.Count; ++j)
+					MeanSquareError += Error[j] * Error[j];
+				MeanSquareError /= Error.Count;
 				if (MeanSquareError < MeanSquareErrorThreshold) break;
 			}
 		}
 
-		int TestSample(List<double> Features)
+		public int TestSample(List<double> Features)
 		{
 			List<double> G = NetValue(Features);
 			List<double> Output = new List<double>();
@@ -253,7 +254,7 @@ namespace NNProject
 				double Sum = 0;
 				for (int j = 0; j < G.Count; ++j)
 					Sum += G[j] * NN.Neurons[0][i].Weights[j];
-				Output.Add(Sum);
+				Output.Add(1 / (1 + Math.Exp(-Sum)));
 			}
 
 			for (int i = 0; i < NumberOfNeuronsInOutputLayer; ++i)
