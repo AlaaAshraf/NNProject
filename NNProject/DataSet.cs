@@ -4,17 +4,20 @@ using System.IO;
 
 namespace NNProject
 {
-	class DataSet
+	public class DataSet
 	{
 		//Features of the different classes
+		public Dictionary<string, List<Double>> Pics;
 		public List<List<double>> Closing, Down, Front, Left;
 
-		public DataSet(string DataSetPath)
+		public DataSet(string path)
 		{
-			Closing = ExtractFeatures(DataSetPath, "Closing Eyes\\");
-			Down = ExtractFeatures(DataSetPath, "Looking Down\\");
-			Front = ExtractFeatures(DataSetPath, "Looking Front\\");
-			Left = ExtractFeatures(DataSetPath, "Looking Left\\");
+			Pics = new Dictionary<string, List<double>>();
+
+			Closing = ExtractFeatures(path, "Closing Eyes\\");
+			Down = ExtractFeatures(path, "Looking Down\\");
+			Front = ExtractFeatures(path, "Looking Front\\");
+			Left = ExtractFeatures(path, "Looking Left\\");
 
 			Normalize();
 		}
@@ -26,7 +29,7 @@ namespace NNProject
 			foreach (string Sample in Directory.EnumerateFiles(DataSetPath + ClassName, "*.pts"))
 			{
 				List<double> Features = new List<double>();
-				string[] Contents = System.IO.File.ReadAllLines(Sample);
+				string[] Contents = File.ReadAllLines(Sample);
 				List<Tuple<double, double>> Points = new List<Tuple<double, double>>();
 
 				for (int i = 3; i < 20 + 3; i++)
@@ -37,13 +40,14 @@ namespace NNProject
 
 				for (int i = 0; i < 20; i++)
 				{
-					if (i == 14)continue;
+					if (i == 14) continue;
 
 					Features.Add(Math.Sqrt(Math.Pow((Points[i].Item1 - Points[14].Item1), 2) + Math.Pow((Points[i].Item2 - Points[14].Item2), 2)));
 					//features.Add((points[i].Item1 - points[14].Item1) + (points[i].Item2-points[14].Item2));
 				}
 
 				Ret.Add(Features);
+				Pics.Add(Sample.Replace(".pts", ".pgm").Replace("bioid", "BioID"), Features);
 			}
 
 			return Ret;

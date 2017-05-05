@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NNProject
 {
-	class Neuron
+	public class Neuron
 	{
 		public List<double> Weights;
 		bool Bias;

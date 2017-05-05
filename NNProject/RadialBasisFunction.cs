@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace NNProject
 {
-	class RadialBasisFunction
+	public class RadialBasisFunction
 	{
-		NeuralNetwork NN;
+		public NeuralNetwork NN;
 		List<List<double>> Centroids;
 		public List<List<int>> ConfusionMatrix;
 		List<double> Sum;
@@ -72,7 +72,7 @@ namespace NNProject
 					Centroids.Add(NN.TrainingData.Left[i]);
 		}
 
-		double EuclideanDistance(List <double> Centroid, List <double> Sample)
+		double EuclideanDistance(List<double> Centroid, List<double> Sample)
 		{
 			double Ret = 0;
 

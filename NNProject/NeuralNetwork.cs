@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NNProject
 {
-	class NeuralNetwork
+	public class NeuralNetwork
 	{
 		public DataSet TrainingData, TestingData;
 		public List<List<Neuron>> Neurons;  //List of lists containing all neurons in the network
@@ -25,7 +25,7 @@ namespace NNProject
 			this.NetworkStructure = NetworkStructure;
 			this.Bias = Bias;
 			Random = new Random();
-			
+
 			for (int i = 0; i < this.NetworkStructure.Count; i++)
 			{
 				List<Neuron> Layer = new List<Neuron>();
