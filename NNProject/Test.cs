@@ -1,32 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WindowsFormsApplication1;
 
 namespace NNProject
 {
-    public partial class Test : Form
-    {
-        MultilayerPerceptron MLP;
-        RadialBasisFunction RBF;
-        Dictionary<int, string> Output;
-        bool MethodSelected;
-        public Test(MultilayerPerceptron m, RadialBasisFunction f, bool MethodSelected)
-        {
-            InitializeComponent();
-            MLP = m;
-            RBF = f;
-            this.MethodSelected = MethodSelected;
-            Output = new Dictionary<int, string>();
-            Output[0] = "Closing";
-            Output[1] = "Down";
-            Output[2] = "Front";
-            Output[3] = "Left";
-        }
+	public partial class Test : Form
+	{
+		MultilayerPerceptron MLP;
+		RadialBasisFunction RBF;
+		Dictionary<int, string> Output;
+		bool MethodSelected;
 
-        private void openImg_Click(object sender, EventArgs e)
-        {
+		private ProcessStartInfo theProcess;
+		public Test(MultilayerPerceptron MLP, RadialBasisFunction RBF, bool MethodSelected)
+		{
+			InitializeComponent();
+			this.MLP = MLP;
+			this.RBF = RBF;
+			this.MethodSelected = MethodSelected;
+			Output = new Dictionary<int, string>();
+			Output[0] = "Closing";
+			Output[1] = "Down";
+			Output[2] = "Front";
+			Output[3] = "Left";
+			theProcess = new ProcessStartInfo("mspaint.exe");
+		}
+		private void openImg_Click(object sender, EventArgs e)
+		{
 			try
 			{
 				string fn = "";
@@ -55,11 +58,37 @@ namespace NNProject
 
 					outTextBox.Text = Output[x];
 				}
+
+
+				//0 closing close, 1 down minimize, 2 front open, 3 left maximize
+
+				if (x == 1)
+				{
+					theProcess.WindowStyle = ProcessWindowStyle.Minimized;
+				}
+				else if (x == 2)
+				{
+					theProcess.WindowStyle = ProcessWindowStyle.Normal;
+				}
+				else
+				{
+					theProcess.WindowStyle = ProcessWindowStyle.Maximized;
+				}
+				// Retrieve the app's exit code
+				Process p = Process.Start(theProcess);
+				if (x == 0)
+				{
+					System.Threading.Thread.Sleep(1000);
+					p.Kill();
+				}
+				else
+					p.WaitForExit();
+
 			}
 			catch (Exception Ex)
 			{
 				MessageBox.Show(Ex.ToString());
 			}
-        }
-    }
+		}
+	}
 }
