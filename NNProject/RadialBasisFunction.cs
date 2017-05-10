@@ -178,7 +178,7 @@ namespace NNProject
 					Sum += (Features[j] - Centroids[i][j]) * (Features[j] - Centroids[i][j]);
 
 				if (Variance[i] < 0.000000001) Ret.Add(0);
-				else Ret.Add(Math.Exp(Sum / Variance[i] / -2));
+				else Ret.Add(Math.Exp(Sum / Variance[i] / Variance[i] / -2));
 			}
 
 			return Ret;
@@ -199,7 +199,7 @@ namespace NNProject
 				for (int j = 0; j < G.Count; ++j)
 					Sum += G[j] * NN.Neurons[0][i].Weights[j];
 
-				Output.Add(1 / (1 + Math.Exp(-Sum)));
+				Output.Add(Sum);
 			}
 
 			for (int i = 0; i < NumberOfNeuronsInOutputLayer; ++i)
