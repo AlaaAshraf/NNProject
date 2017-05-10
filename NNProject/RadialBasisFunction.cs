@@ -177,7 +177,7 @@ namespace NNProject
 				for (int j = 0; j < NumberOfInputFeatures; ++j)
 					Sum += (Features[j] - Centroids[i][j]) * (Features[j] - Centroids[i][j]);
 
-				if (Variance[i] < 0.0000001) Ret.Add(0);
+				if (Variance[i] < 0.000000001) Ret.Add(0);
 				else Ret.Add(Math.Exp(Sum / Variance[i] / -2));
 			}
 
@@ -238,6 +238,7 @@ namespace NNProject
 				for (int j = 0; j < Error.Count; ++j)
 					MeanSquareError += Error[j] * Error[j];
 				MeanSquareError /= Error.Count;
+				MeanSquareError /= 2;
 				if (MeanSquareError < MeanSquareErrorThreshold) break;
 			}
 		}
